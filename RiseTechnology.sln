@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{0B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contact", "Contact", "{A85FC940-1A23-4CFB-8007-257B086F94E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contact.Service", "Services\Contact\Contact.Service\Contact.Service.csproj", "{2499E8B7-0CE0-45EC-B962-AA9B1526ADB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contact.Service", "Services\Contact\Contact.Service\Contact.Service.csproj", "{2499E8B7-0CE0-45EC-B962-AA9B1526ADB5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
