@@ -9,7 +9,5 @@
         public string LastName { get; set; }
 
         public string Company { get; set; }
-
-        public List<CommunicationDto> Communications { get; set; }
     }
 }
