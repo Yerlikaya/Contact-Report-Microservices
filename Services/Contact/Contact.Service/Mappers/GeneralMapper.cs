@@ -10,6 +10,7 @@ namespace Contact.Service.Mappers
             CreateMap<Models.Contact, ContactDto>().ReverseMap();
             CreateMap<Models.Contact, ContactCreateDto>().ReverseMap();
             CreateMap<Models.Contact, ContactUpdateDto>().ReverseMap();
+            CreateMap<Models.Contact, ContactWithCommunicationsDto>().ReverseMap();
 
             CreateMap<Models.Communication, CommunicationDto>().ReverseMap();
             CreateMap<Models.Communication, CommunicationCreateDto>().ReverseMap();

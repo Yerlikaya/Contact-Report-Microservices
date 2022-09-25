@@ -17,13 +17,13 @@ namespace Contact.Service.Services
         #endregion
 
         #region ctor
-        public ContactService(IMapper mapper, IDatabaseSettings databaseSettings)
+        public ContactService(IMapper mapper, IDatabaseSettings databaseSettings, ICommunicationService communicationService)
         {
             var client = new MongoClient(databaseSettings.ConnectionString);
             var database = client.GetDatabase(databaseSettings.DatabaseName);
             _contactCollection = database.GetCollection<ContactModel>(databaseSettings.ContactCollectionName);
-
             _mapper = mapper;
+            _communicationService = communicationService;
         }
         #endregion
 
@@ -42,8 +42,8 @@ namespace Contact.Service.Services
                 return Response<ContactWithCommunicationsDto>.Fail("Contact not found!", 404);
             }
             var contactDto = _mapper.Map<ContactWithCommunicationsDto>(contact);
-            contactDto.Communications = _communicationService.GetAllByContactId(contact.Id).Result.Data;
-
+            var communicationsResponse = await _communicationService.GetAllByContactId(contact.Id);
+            contactDto.Communications = communicationsResponse.Data;
             return Response<ContactWithCommunicationsDto>.Success(contactDto, 200);
         }
         public async Task<Response<ContactDto>> CreateAsync(ContactCreateDto contact)

@@ -35,7 +35,11 @@ namespace Contact.Service.Services
         public async Task<Response<List<CommunicationDto>>> GetAllByContactId(string contactId)
         {
             var communications = await _communicationCollection.Find(x => x.ContactId == contactId).ToListAsync();
-            return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
+            if (communications.Any())
+            {
+                return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
+            }
+            return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
         }
         public async Task<Response<CommunicationDto>> GetById(string id)
         {
