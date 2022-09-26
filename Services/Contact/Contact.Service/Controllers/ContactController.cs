@@ -24,7 +24,7 @@ namespace Contact.Service.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public async Task<IActionResult> GetById(string id)
         {
             var response = await _contactService.GetById(id);
             return CreateActionResultInstance(response);
@@ -43,7 +43,7 @@ namespace Contact.Service.Controllers
             return CreateActionResultInstance(response);
         }
         [HttpDelete]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> DeleteById(string id)
         {
             var response = await _contactService.DeleteAsync(id);
             return CreateActionResultInstance(response);

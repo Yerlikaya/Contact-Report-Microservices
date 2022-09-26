@@ -18,9 +18,9 @@ namespace Contact.ServiceTests.Services
         private readonly IMapper _mapper;
         public CommunicationFakeService()
         {
-            contextDb = new List<Communication>() {new Communication {Id ="1",CommunicationType = CommunicationType.EMAIL, Address ="sample@email.com", ContactId="11"},
-            new Communication {Id ="2",CommunicationType = CommunicationType.PHONE, Address ="909998887766", ContactId="22"},
-            new Communication {Id ="3",CommunicationType = CommunicationType.LOCATION, Address ="ANTALYA", ContactId="22"}};
+            contextDb = new List<Communication>() {new Communication {Id ="1",CommunicationType = CommunicationType.EMAIL, Address ="sample@email.com", ContactId="1"},
+            new Communication {Id ="2",CommunicationType = CommunicationType.PHONE, Address ="909998887766", ContactId="2"},
+            new Communication {Id ="3",CommunicationType = CommunicationType.LOCATION, Address ="ANTALYA", ContactId="2"}};
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<GeneralMapper>());
             _mapper = config.CreateMapper();
