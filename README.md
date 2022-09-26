@@ -16,11 +16,10 @@ communicationlar BackgroundService tarafından alınarak kuruğa bırakılan uni
 
 **DataBaseler Docker ile kaldırılıp kullanılmıştır.
 
-**UnitTestler e oluşturacak kadar zamanım kalmadığı için bir şey yapamadım. 
+**ContactService için FakeService tanımlamaları yapıldı ve Controller UnitTest leri tamamlandı.
 
 **RabbitMQ Cloud üzerinden kullanılmıştır ve bilgileri aşağıdadır. 
 
-Teşekkürler...
 
 Oğuzhan Yerlikaya
 
