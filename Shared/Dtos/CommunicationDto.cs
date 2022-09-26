@@ -1,6 +1,4 @@
-﻿using Contact.Service.Models;
-
-namespace Contact.Service.Dtos
+﻿namespace Shared.Dtos
 {
     public class CommunicationDto
     {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Report.Service.Context;
+using Report.Service.DBContext;
 using Report.Service.Dtos;
 using Report.Service.Models;
 using Report.Service.Services;
@@ -18,10 +18,12 @@ namespace Report.Service.Controllers
     public class ReportsController : CustomBaseController
     {
         private readonly IReportService _reportService;
+        private readonly RabbitMQPublisherService _rabbitMQPublisherService;
 
-        public ReportsController(IReportService reportService)
+        public ReportsController(IReportService reportService, RabbitMQPublisherService rabbitMQPublisherService)
         {
             _reportService = reportService;
+            _rabbitMQPublisherService = rabbitMQPublisherService;
         }
 
         [HttpGet]
@@ -39,6 +41,7 @@ namespace Report.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> PostReport(ReportCreateDto report)
         {
+            _rabbitMQPublisherService.Publish(new CreateReportEvent { ReportName = CreateReportEvent.GetReportName(report.CreatedDate) });
             var response = await _reportService.Create(report);
             return CreateActionResultInstance(response);
         }

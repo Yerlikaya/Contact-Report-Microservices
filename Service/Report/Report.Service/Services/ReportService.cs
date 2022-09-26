@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using Report.Service.Context;
+using Report.Service.DBContext;
 using Report.Service.Dtos;
 using Shared.Dtos;
 

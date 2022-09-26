@@ -7,6 +7,7 @@ namespace Contact.Service.Services
     {
         Task<Response<List<CommunicationDto>>> GetAllAsync();
         Task<Response<List<CommunicationDto>>> GetAllByContactId(string contactId);
+        Task<Response<List<CommunicationDto>>> GetAllByContactIds(List<string> contactIds);
         Task<Response<CommunicationDto>> GetById(string id);
         Task<Response<CommunicationDto>> CreateAsync(CommunicationCreateDto communication);
         Task<Response<NoContent>> UpdateAsync(CommunicationUpdateDto communication);

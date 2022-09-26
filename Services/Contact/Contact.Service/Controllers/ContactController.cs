@@ -48,5 +48,13 @@ namespace Contact.Service.Controllers
             var response = await _contactService.DeleteAsync(id);
             return CreateActionResultInstance(response);
         }
+
+        [HttpGet]
+        [Route("GetAllContactsWithCommunications")]
+        public async Task<IActionResult> GetAllReportData()
+        {
+            var response = await _contactService.GetAllContactWithCommunicationsAsync();
+            return CreateActionResultInstance(response);
+        }
     }
 }

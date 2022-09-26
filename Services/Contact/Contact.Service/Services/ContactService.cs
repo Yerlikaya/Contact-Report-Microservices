@@ -30,8 +30,20 @@ namespace Contact.Service.Services
         #region methods
         public async Task<Response<List<ContactDto>>> GetAllAsync()
         {
-            var contact = await _contactCollection.Find(x => true).ToListAsync();
-            return Response<List<ContactDto>>.Success(_mapper.Map<List<ContactDto>>(contact), 200);
+            var contacts = await _contactCollection.Find(x => true).ToListAsync();
+            return Response<List<ContactDto>>.Success(_mapper.Map<List<ContactDto>>(contacts), 200);
+        }
+        public async Task<Response<List<ContactWithCommunicationsDto>>> GetAllContactWithCommunicationsAsync()
+        {
+            var contacts = await _contactCollection.Find(x => true).ToListAsync();
+            var contactIds = contacts.Select(x => x.Id).ToList();
+            var communications = (await _communicationService.GetAllByContactIds(contactIds)).Data;
+            var contactDtos = _mapper.Map<List<ContactWithCommunicationsDto>>(contacts);
+            contactDtos.ForEach(x =>
+            {
+                x.Communications = communications.Where(y => y.ContactId == x.Id).ToList();
+            });
+            return Response<List<ContactWithCommunicationsDto>>.Success(contactDtos, 200);
         }
 
         public async Task<Response<ContactWithCommunicationsDto>> GetById(string id)

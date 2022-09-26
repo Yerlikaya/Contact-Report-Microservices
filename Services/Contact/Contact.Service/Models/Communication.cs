@@ -1,4 +1,5 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using Shared.Dtos;
 
 namespace Contact.Service.Models
 {
@@ -14,12 +15,5 @@ namespace Contact.Service.Models
 
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         public string ContactId { get; set; }
-    }
-
-    public enum CommunicationType
-    {
-        EMAIL,
-        PHONE,
-        LOCATION
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contact.Service.Dtos;
+using Shared.Dtos;
 
 namespace Contact.Service.Mappers
 {

@@ -1,4 +1,4 @@
-﻿namespace Contact.Service.Dtos
+﻿namespace Shared.Dtos
 {
     public class ContactDto
     {

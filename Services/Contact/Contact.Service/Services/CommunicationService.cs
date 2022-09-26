@@ -2,6 +2,7 @@
 using Contact.Service.Dtos;
 using Contact.Service.Models;
 using Contact.Service.Settings;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using Shared.Dtos;
 using System.Linq.Expressions;
@@ -35,6 +36,16 @@ namespace Contact.Service.Services
         public async Task<Response<List<CommunicationDto>>> GetAllByContactId(string contactId)
         {
             var communications = await _communicationCollection.Find(x => x.ContactId == contactId).ToListAsync();
+            if (communications.Any())
+            {
+                return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
+            }
+            return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
+        }
+        public async Task<Response<List<CommunicationDto>>> GetAllByContactIds(List<string> contactIds)
+        {
+            var filter = Builders<Communication>.Filter.In(x => x.ContactId, contactIds);
+            var communications = await _communicationCollection.Find(filter).ToListAsync();
             if (communications.Any())
             {
                 return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);

@@ -1,4 +1,5 @@
 ﻿using Contact.Service.Models;
+using Shared.Dtos;
 
 namespace Contact.Service.Dtos
 {

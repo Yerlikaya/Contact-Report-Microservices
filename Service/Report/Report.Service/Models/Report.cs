@@ -14,6 +14,7 @@ namespace Report.Service.Models
     {
         WAITING,
         INPROGRESS,
-        COMPLETED
+        COMPLETED,
+        FAILED
     }
 }
