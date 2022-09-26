@@ -6,6 +6,7 @@ using Report.Service.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddScoped<IReportService, ReportService>();
 builder.Services.AddHttpClient();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllers();
@@ -25,7 +26,6 @@ builder.Services.AddSingleton<HttpClientService>();
 
 builder.Services.AddHostedService<ExcelReportBackgroundService>();
 
-builder.Services.AddScoped<IReportService, ReportService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

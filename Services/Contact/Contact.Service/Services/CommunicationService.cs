@@ -6,7 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using Shared.Dtos;
 using System.Linq.Expressions;
-
+using Communication = Contact.Service.Models.Communication;
 namespace Contact.Service.Services
 {
     public class CommunicationService: ICommunicationService

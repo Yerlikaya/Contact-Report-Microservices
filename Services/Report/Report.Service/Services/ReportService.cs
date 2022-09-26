@@ -34,23 +34,22 @@ namespace Report.Service.Services
 
             return Response<ReportDto>.Success(_mapper.Map<ReportDto>(report), 200);
         }
-        public async Task<Response<ReportDto>> Create(ReportCreateDto reportDto)
+        public async Task<Response<ReportDto>> CreateAsync(ReportCreateDto reportDto)
         {
             var report = _mapper.Map<Models.Report>(reportDto);
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
             return Response<ReportDto>.Success(_mapper.Map<ReportDto>(report), 200);
         }
-        public async Task<Response<NoContent>> Update(ReportDto reportDto)
+        public async Task<Response<NoContent>> UpdateAsync(ReportDto reportDto)
         {
             var report = _mapper.Map<Models.Report>(reportDto);
-            _context.Entry(report).State = EntityState.Modified;
-
+            _context.Update(report);
             try
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (Exception ex)
             {
                 if (!ReportExists(report.Id))
                 {
@@ -58,13 +57,13 @@ namespace Report.Service.Services
                 }
                 else
                 {
-                    throw;
+                    return Response<NoContent>.Fail(ex.Message, 500); ;
                 }
             }
 
             return Response<NoContent>.Success( 200);
         }
-        public async Task<Response<NoContent>> Delete(int id)
+        public async Task<Response<NoContent>> DeleteAsync(int id)
         {
             var report = await _context.Reports.FindAsync(id);
 

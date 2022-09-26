@@ -41,8 +41,14 @@ namespace Report.Service.Controllers
         [HttpPost]
         public async Task<IActionResult> PostReport(ReportCreateDto report)
         {
-            _rabbitMQPublisherService.Publish(new CreateReportEvent { ReportName = CreateReportEvent.GetReportName(report.CreatedDate) });
-            var response = await _reportService.Create(report);
+            var response = await _reportService.CreateAsync(report);
+            _rabbitMQPublisherService.Publish(new CreateReportEvent { ReportId = response.Data.Id });
+            return CreateActionResultInstance(response);
+        }
+        [HttpPut]
+        public async Task<IActionResult> PutReport(ReportDto report)
+        {
+            var response = await _reportService.UpdateAsync(report);
             return CreateActionResultInstance(response);
         }
     }
