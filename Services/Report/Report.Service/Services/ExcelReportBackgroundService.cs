@@ -56,9 +56,12 @@ namespace Report.Service.Services
                 List<ReportDataDto> reportDatas = new List<ReportDataDto>();
                 CreateReportData(contactsResponse.Data, reportDatas);
                 CreateExcel(reportEvent, reportDatas, path);
+
                 Task.Delay(5000).Wait();// Yapay kuyruk trafiği...
+
                 _= UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.COMPLETED);
 
+                _channel.BasicAck(@event.DeliveryTag, false);
             }
             catch (Exception ex)
             {
