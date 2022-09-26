@@ -37,13 +37,13 @@ namespace Contact.Service.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(CommunicationCreateDto communication)
+        public async Task<IActionResult> Create(CommunicationCreateDto communication)
         {
             var response = await _communicationService.CreateAsync(communication);
             return CreateActionResultInstance(response);
         }
         [HttpPut]
-        public async Task<IActionResult> Put(CommunicationUpdateDto communication)
+        public async Task<IActionResult> Update(CommunicationUpdateDto communication)
         {
             var response = await _communicationService.UpdateAsync(communication);
             return CreateActionResultInstance(response);

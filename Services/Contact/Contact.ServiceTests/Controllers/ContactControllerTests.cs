@@ -5,75 +5,65 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Contact.Service.Services;
 using Contact.ServiceTests.Services;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos;
 using Contact.Service.Dtos;
-using Contact.Service.Services;
 
 namespace Contact.Service.Controllers.Tests
 {
     [TestClass()]
-    public class CommunicationControllerTests
+    public class ContactControllerTests
     {
-        private readonly CommunicationController _controller;
-        private readonly ICommunicationService _service;
-        public CommunicationControllerTests()
+        private readonly ContactController _controller;
+        private readonly IContactService _contactService;
+        public ContactControllerTests()
         {
-            _service = new CommunicationFakeService();
-            _controller = new CommunicationController(_service);
+            _contactService = new ContactFakeService();
+            _controller = new ContactController(_contactService);
         }
+
 
         [TestMethod()]
         public async Task GetAllTest()
         {
             var actionResult = await _controller.GetAll();
             var okResult = actionResult as ObjectResult;
-            var actualConfiguration = okResult.Value as Response<List<CommunicationDto>>;
+            var actualConfiguration = okResult.Value as Response<List<ContactDto>>;
             Assert.IsNotNull(actualConfiguration);
             Assert.IsTrue(actualConfiguration.IsSuccessful);
             Assert.IsNotNull(actualConfiguration.Data);
         }
 
         [TestMethod()]
-        public async Task GetByIdTest()
+        public async Task GetTest()
         {
             var actionResult = await _controller.GetById("1");
             var okResult = actionResult as ObjectResult;
-            var actualConfiguration = okResult.Value as Response<CommunicationDto>;
+            var actualConfiguration = okResult.Value as Response<ContactWithCommunicationsDto>;
             Assert.IsNotNull(actualConfiguration);
             Assert.IsTrue(actualConfiguration.IsSuccessful);
             Assert.IsNotNull(actualConfiguration.Data);
         }
 
         [TestMethod()]
-        public async Task GetAllByContactIdTest()
+        public async Task CreateTest()
         {
-            var actionResult = await _controller.GetAllByContactId("1");
+            ContactCreateDto contactCreateDto = new ContactCreateDto {FirstName = "Oguzhan", LastName = "Yerlikaya", Company = "Rise Tech" };
+            var actionResult = await _controller.Create(contactCreateDto);
             var okResult = actionResult as ObjectResult;
-            var actualConfiguration = okResult.Value as Response<List<CommunicationDto>>;
+            var actualConfiguration = okResult.Value as Response<ContactDto>;
             Assert.IsNotNull(actualConfiguration);
             Assert.IsTrue(actualConfiguration.IsSuccessful);
             Assert.IsNotNull(actualConfiguration.Data);
         }
 
         [TestMethod()]
-        public async Task PostTest()
+        public async Task UpdateTest()
         {
-            CommunicationCreateDto communicationCreateDto = new CommunicationCreateDto { ContactId = "111", CommunicationType=CommunicationType.LOCATION, Address ="TURKEY" };
-            var actionResult = await _controller.Create(communicationCreateDto);
-            var okResult = actionResult as ObjectResult;
-            var actualConfiguration = okResult.Value as Response<CommunicationDto>;
-            Assert.IsNotNull(actualConfiguration);
-            Assert.IsTrue(actualConfiguration.IsSuccessful);
-            Assert.IsNotNull(actualConfiguration.Data);
-        }
-
-        [TestMethod()]
-        public async Task PutTest()
-        {
-            CommunicationUpdateDto communicationUpdateDto = new CommunicationUpdateDto { Id="1", ContactId = "1256", CommunicationType = CommunicationType.LOCATION, Address = "TURKEY" };
-            var actionResult = await _controller.Update(communicationUpdateDto);
+            ContactUpdateDto contactUpdateDto = new ContactUpdateDto { Id = "3", FirstName = "Oguzhan", LastName = "Yerlikaya", Company = "Holywood" };
+            var actionResult = await _controller.Update(contactUpdateDto);
             var okResult = actionResult as ObjectResult;
             var actualConfiguration = okResult.Value as Response<NoContent>;
             Assert.IsNotNull(actualConfiguration);
@@ -81,13 +71,24 @@ namespace Contact.Service.Controllers.Tests
         }
 
         [TestMethod()]
-        public async Task DeleteByIdTest()
+        public async Task DeleteTest()
         {
             var actionResult = await _controller.DeleteById("1");
             var okResult = actionResult as ObjectResult;
             var actualConfiguration = okResult.Value as Response<NoContent>;
             Assert.IsNotNull(actualConfiguration);
             Assert.IsTrue(actualConfiguration.IsSuccessful);
+        }
+
+        [TestMethod()]
+        public async Task GetAllReportDataTest()
+        {
+            var actionResult = await _controller.GetAllReportData();
+            var okResult = actionResult as ObjectResult;
+            var actualConfiguration = okResult.Value as Response<List<ContactWithCommunicationsDto>>;
+            Assert.IsNotNull(actualConfiguration);
+            Assert.IsTrue(actualConfiguration.IsSuccessful);
+            Assert.IsNotNull(actualConfiguration.Data);
         }
     }
 }
