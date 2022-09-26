@@ -1,4 +1,6 @@
-﻿using Contact.Service.Dtos;
+﻿using AutoMapper;
+using Contact.Service.Dtos;
+using Contact.Service.Mappers;
 using Contact.Service.Models;
 using Contact.Service.Services;
 using Shared.Dtos;
@@ -13,45 +15,83 @@ namespace Contact.ServiceTests.Services
     public class CommunicationFakeService : ICommunicationService
     {
         private readonly List<Communication> contextDb;
+        private readonly IMapper _mapper;
         public CommunicationFakeService()
         {
             contextDb = new List<Communication>() {new Communication {Id ="1",CommunicationType = CommunicationType.EMAIL, Address ="sample@email.com", ContactId="11"},
             new Communication {Id ="2",CommunicationType = CommunicationType.PHONE, Address ="909998887766", ContactId="22"},
             new Communication {Id ="3",CommunicationType = CommunicationType.LOCATION, Address ="ANTALYA", ContactId="22"}};
+
+            var config = new MapperConfiguration(cfg => cfg.AddProfile<GeneralMapper>());
+            _mapper = config.CreateMapper();
         }
-        public Task<Response<CommunicationDto>> CreateAsync(CommunicationCreateDto communication)
+        public async Task<Response<CommunicationDto>> CreateAsync(CommunicationCreateDto communication)
         {
-            throw new NotImplementedException();
+            var newCommunication = _mapper.Map<Communication>(communication);
+            contextDb.Add(newCommunication);
+            return Response<CommunicationDto>.Success(_mapper.Map<CommunicationDto>(newCommunication), 200);
         }
 
-        public Task<Response<NoContent>> DeleteAsync(string id)
+        public async Task<Response<NoContent>> DeleteAsync(string id)
         {
-            throw new NotImplementedException();
+            var communication = contextDb.FirstOrDefault(c => c.Id == id);
+            var result =  contextDb.Remove(communication);
+            if (!result)
+            {
+                return Response<NoContent>.Fail("Communications not found!", 404);
+            }
+            return Response<NoContent>.Success(204);
         }
 
-        public Task<Response<List<CommunicationDto>>> GetAllAsync()
+        public async Task<Response<List<CommunicationDto>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var communications =  contextDb;
+            return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
         }
 
-        public Task<Response<List<CommunicationDto>>> GetAllByContactId(string contactId)
+        public async Task<Response<List<CommunicationDto>>> GetAllByContactId(string contactId)
         {
-            throw new NotImplementedException();
+            var communications = contextDb.Where(x => x.ContactId == contactId).ToList();
+            if (communications.Any())
+            {
+                return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
+            }
+            return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
         }
 
-        public Task<Response<List<CommunicationDto>>> GetAllByContactIds(List<string> contactIds)
+        public async Task<Response<List<CommunicationDto>>> GetAllByContactIds(List<string> contactIds)
         {
-            throw new NotImplementedException();
+            var communications = contextDb.Where(x =>contactIds.Contains(x.ContactId)).ToList();
+            if (communications.Any())
+            {
+                return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
+            }
+            return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
         }
 
-        public Task<Response<CommunicationDto>> GetById(string id)
+        public async Task<Response<CommunicationDto>> GetById(string id)
         {
-            throw new NotImplementedException();
+            var communication =  contextDb.FirstOrDefault(x => x.Id == id);
+            if (communication == null)
+            {
+                return Response<CommunicationDto>.Fail("Communication not found!", 404);
+            }
+            return Response<CommunicationDto>.Success(_mapper.Map<CommunicationDto>(communication), 200);
         }
 
-        public Task<Response<NoContent>> UpdateAsync(CommunicationUpdateDto communication)
+        public async Task<Response<NoContent>> UpdateAsync(CommunicationUpdateDto communication)
         {
-            throw new NotImplementedException();
+            var updateCoummunication = _mapper.Map<Communication>(communication);
+            var communicationOld = contextDb.FirstOrDefault(x => x.Id == updateCoummunication.Id);
+            
+            if (communicationOld == null)
+            {
+                return Response<NoContent>.Fail("Communications not found!", 404);
+            }
+
+            contextDb.Remove(communicationOld);
+            contextDb.Add(updateCoummunication);
+            return Response<NoContent>.Success(204);
         }
     }
 }
