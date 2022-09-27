@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RabbitMQ.Client;
 using Report.Service.DBContext;
+using Report.Service.Models;
 using Report.Service.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,8 @@ builder.Services.AddSingleton<RabbitMQPublisherService>();
 builder.Services.AddSingleton<HttpClientService>();
 
 builder.Services.AddHostedService<ExcelReportBackgroundService>();
+
+builder.Services.Configure<RiseTechServices>(builder.Configuration.GetSection("RiseTechServices"));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
