@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Report.Service.Dtos;
@@ -15,13 +16,15 @@ namespace Report.Service.Services
         private readonly RabbitMQClientService _rabbitMQClientService;
         private readonly HttpClientService _httpClientService;
         private IModel _channel;
-        public static string ReportDataGetUrl = @"http://localhost:5235/api/Contact/GetAllContactsWithCommunications";
-        public static string ReportUpdateUrl = @"http://localhost:5170/api/Reports";
+        private readonly string _ContactReportDataGetUrl;
+        private readonly string _ReportUpdateUrl;
 
-        public ExcelReportBackgroundService(RabbitMQClientService rabbitMQClientService, HttpClientService httpClientService)
+        public ExcelReportBackgroundService(RabbitMQClientService rabbitMQClientService, HttpClientService httpClientService, IOptions<RiseTechServices> riseTechService)
         {
             _rabbitMQClientService = rabbitMQClientService;
             _httpClientService = httpClientService;
+            _ContactReportDataGetUrl = $"{riseTechService.Value.Domain}:{riseTechService.Value.ContactService.Port}/{riseTechService.Value.ContactService.ContactReportDataGetPath}";
+            _ReportUpdateUrl = $"{riseTechService.Value.Domain}:{riseTechService.Value.ReportService.Port}/{riseTechService.Value.ReportService.ReportUpdatePath}";
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
@@ -45,7 +48,7 @@ namespace Report.Service.Services
             try
             {
                 _= UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.INPROGRESS);
-                var reportDataRaw = await _httpClientService.GetAsync(ReportDataGetUrl);
+                var reportDataRaw = await _httpClientService.GetAsync(_ContactReportDataGetUrl);
 
                 var options = new JsonSerializerOptions
                 {
@@ -73,7 +76,7 @@ namespace Report.Service.Services
         private async Task UpdateReportInformationsAsync(CreateReportEvent reportEvent, string path, ReportStatusType reportStatusType)
         {
             StringContent stringContent = CreateUpdateRequest(reportEvent, path, reportStatusType);
-            await _httpClientService.PostPutAsync(ReportUpdateUrl, stringContent, true);
+            await _httpClientService.PostPutAsync(_ReportUpdateUrl, stringContent, true);
         }
 
         private static StringContent CreateUpdateRequest(CreateReportEvent reportEvent, string path, ReportStatusType reportStatusType)
