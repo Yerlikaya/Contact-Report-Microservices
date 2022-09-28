@@ -18,35 +18,36 @@ namespace Report.Service.Controllers
     public class ReportsController : CustomBaseController
     {
         private readonly IReportService _reportService;
-        private readonly RabbitMQPublisherService _rabbitMQPublisherService;
+        private readonly IRabbitMQPublisherService _rabbitMQPublisherService;
 
-        public ReportsController(IReportService reportService, RabbitMQPublisherService rabbitMQPublisherService)
+        public ReportsController(IReportService reportService, IRabbitMQPublisherService rabbitMQPublisherService)
         {
             _reportService = reportService;
             _rabbitMQPublisherService = rabbitMQPublisherService;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllReports()
+        public async Task<IActionResult> GetAll()
         {
             var response = await _reportService.GetAllAsync();
             return CreateActionResultInstance(response);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetReport(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var response = await _reportService.GetByIdAsync(id);
             return CreateActionResultInstance(response);
         }
         [HttpPost]
-        public async Task<IActionResult> PostReport(ReportCreateDto report)
+        public async Task<IActionResult> Create(ReportCreateDto report)
         {
             var response = await _reportService.CreateAsync(report);
-            _rabbitMQPublisherService.Publish(new CreateReportEvent { ReportId = response.Data.Id });
+            _rabbitMQPublisherService.Publish(new CreateReportEvent { ReportId = response.Data.Id }, 
+                Constant.ReportQueue, Constant.ReportRouting, Constant.ReportExchange);
             return CreateActionResultInstance(response);
         }
         [HttpPut]
-        public async Task<IActionResult> PutReport(ReportDto report)
+        public async Task<IActionResult> Update(ReportDto report)
         {
             var response = await _reportService.UpdateAsync(report);
             return CreateActionResultInstance(response);

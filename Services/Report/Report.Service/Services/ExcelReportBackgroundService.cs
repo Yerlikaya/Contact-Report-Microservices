@@ -16,27 +16,28 @@ namespace Report.Service.Services
         private readonly RabbitMQClientService _rabbitMQClientService;
         private readonly HttpClientService _httpClientService;
         private IModel _channel;
-        private readonly string _ContactReportDataGetUrl;
-        private readonly string _ReportUpdateUrl;
+        private readonly string _contactReportDataGetUrl;
+        private readonly string _reportUpdateUrl;
+
 
         public ExcelReportBackgroundService(RabbitMQClientService rabbitMQClientService, HttpClientService httpClientService, IOptions<RiseTechServices> riseTechService)
         {
             _rabbitMQClientService = rabbitMQClientService;
             _httpClientService = httpClientService;
-            _ContactReportDataGetUrl = $"{riseTechService.Value.Domain}:{riseTechService.Value.ContactService.Port}/{riseTechService.Value.ContactService.ContactReportDataGetPath}";
-            _ReportUpdateUrl = $"{riseTechService.Value.Domain}:{riseTechService.Value.ReportService.Port}/{riseTechService.Value.ReportService.ReportUpdatePath}";
+            _contactReportDataGetUrl = $"{riseTechService.Value.ContactService.Domain}{Constant.ContactGetReportData}";
+            _reportUpdateUrl = $"{riseTechService.Value.ReportService.Domain}{Constant.ReportUpdateUrl}";
         }
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
-            _channel = _rabbitMQClientService.Connect();
+            _channel = _rabbitMQClientService.Connect(Constant.ReportQueue, Constant.ReportRouting, Constant.ReportExchange);
             _channel.BasicQos(0, 1, false);
             return base.StartAsync(cancellationToken);
         }
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var consumer = new AsyncEventingBasicConsumer(_channel);
-            _channel.BasicConsume(RabbitMQClientService.QueueName, false, consumer);
+            _channel.BasicConsume(Constant.ReportQueue, false, consumer);
             consumer.Received += Consumer_Received;
             return Task.CompletedTask;
         }
@@ -48,19 +49,17 @@ namespace Report.Service.Services
             try
             {
                 _= UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.INPROGRESS);
-                var reportDataRaw = await _httpClientService.GetAsync(_ContactReportDataGetUrl);
+                var reportDataRaw = await _httpClientService.GetAsync(_contactReportDataGetUrl);
 
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                var contactsResponse = JsonSerializer.Deserialize<ContactReportDataDto>(reportDataRaw.Data, options);
+                var contactsResponse = JsonSerializer.Deserialize<Response<List<ContactStatisticsDto>>>(reportDataRaw.Data, options);
 
-                List<ReportDataDto> reportDatas = new List<ReportDataDto>();
-                CreateReportData(contactsResponse.Data, reportDatas);
-                CreateExcel(reportEvent, reportDatas, path);
+                CreateExcel(contactsResponse.Data, path);
 
-                Task.Delay(5000).Wait();// Yapay kuyruk trafiği...
+                Task.Delay(5000).Wait();// fake trafic
 
                 _= UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.COMPLETED);
 
@@ -76,7 +75,7 @@ namespace Report.Service.Services
         private async Task UpdateReportInformationsAsync(CreateReportEvent reportEvent, string path, ReportStatusType reportStatusType)
         {
             StringContent stringContent = CreateUpdateRequest(reportEvent, path, reportStatusType);
-            await _httpClientService.PostPutAsync(_ReportUpdateUrl, stringContent, true);
+            await _httpClientService.PostPutAsync(_reportUpdateUrl, stringContent, true);
         }
 
         private static StringContent CreateUpdateRequest(CreateReportEvent reportEvent, string path, ReportStatusType reportStatusType)
@@ -87,32 +86,12 @@ namespace Report.Service.Services
             return stringContent;
         }
 
-        private static void CreateExcel(CreateReportEvent reportEvent,List<ReportDataDto> reportDatas, string path)
+        private static void CreateExcel(List<ContactStatisticsDto> reportDatas, string path)
         {
             using (IXLWorkbook workbook = new XLWorkbook())
             {
-                workbook.AddWorksheet("ReportWithLocations").FirstCell().InsertTable<ReportDataDto>(reportDatas,false);
+                workbook.AddWorksheet("ReportWithLocations").FirstCell().InsertTable<ContactStatisticsDto>(reportDatas,false);
                 workbook.SaveAs(path);
-            }
-        }
-
-        private static void CreateReportData(List<ContactWithCommunicationsDto> contacts, List<ReportDataDto> reportDatas)
-        {
-            var locations = contacts.SelectMany(x => x.Communications)
-                            .Where(y => y?.CommunicationType == CommunicationType.LOCATION)
-                            .Select(z => z.Address).Distinct().ToList();
-
-
-            foreach (var locationName in locations)
-            {
-                var contactsFromLocation = contacts.Where(x => x.Communications.Any(y => y.Address == locationName && y.CommunicationType == CommunicationType.LOCATION));
-                var phoneNumberCount = contactsFromLocation.SelectMany(x => x.Communications).Where(y => y.CommunicationType == CommunicationType.PHONE).Count();
-                reportDatas.Add(new ReportDataDto
-                {
-                    Location = locationName,
-                    ContactCount = contactsFromLocation.Count(),
-                    PhoneNumberCount = phoneNumberCount
-                });
             }
         }
 

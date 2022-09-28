@@ -7,16 +7,13 @@ namespace Report.Service.Services
         private readonly ConnectionFactory _connectionFactory;
         private IConnection _connection;
         private IModel _channel;
-        public static string ExchangeName = "ReportDirectExchange";
-        public static string RoutingReport = "report-route";
-        public static string QueueName = "report-queue";
 
         public RabbitMQClientService(ConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
         }
 
-        public IModel Connect()
+        public IModel Connect(string queue, string routing, string exchange)
         {
             _connection = _connectionFactory.CreateConnection();
 
@@ -26,9 +23,9 @@ namespace Report.Service.Services
             }
 
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(ExchangeName, type:"direct", true, false);
-            _channel.QueueDeclare(QueueName, true, false, false, null);
-            _channel.QueueBind(QueueName,ExchangeName,RoutingReport);
+            _channel.ExchangeDeclare(exchange, type:"direct", true, false);
+            _channel.QueueDeclare(queue, true, false, false, null);
+            _channel.QueueBind(queue, exchange, routing);
             return _channel;
         }
 

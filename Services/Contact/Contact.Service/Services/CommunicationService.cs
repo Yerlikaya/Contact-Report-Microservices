@@ -33,7 +33,7 @@ namespace Contact.Service.Services
             var communications = await _communicationCollection.Find(x => true).ToListAsync();
             return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
         }
-        public async Task<Response<List<CommunicationDto>>> GetAllByContactId(string contactId)
+        public async Task<Response<List<CommunicationDto>>> GetAllByContactIdAsync(string contactId)
         {
             var communications = await _communicationCollection.Find(x => x.ContactId == contactId).ToListAsync();
             if (communications.Any())
@@ -42,7 +42,7 @@ namespace Contact.Service.Services
             }
             return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
         }
-        public async Task<Response<List<CommunicationDto>>> GetAllByContactIds(List<string> contactIds)
+        public async Task<Response<List<CommunicationDto>>> GetAllByContactIdsAsync(List<string> contactIds)
         {
             var filter = Builders<Communication>.Filter.In(x => x.ContactId, contactIds);
             var communications = await _communicationCollection.Find(filter).ToListAsync();
@@ -52,7 +52,7 @@ namespace Contact.Service.Services
             }
             return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
         }
-        public async Task<Response<CommunicationDto>> GetById(string id)
+        public async Task<Response<CommunicationDto>> GetByIdAsync(string id)
         {
             var communication = await _communicationCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
             if(communication == null)

@@ -33,17 +33,33 @@ namespace Contact.Service.Services
             var contacts = await _contactCollection.Find(x => true).ToListAsync();
             return Response<List<ContactDto>>.Success(_mapper.Map<List<ContactDto>>(contacts), 200);
         }
-        public async Task<Response<List<ContactWithCommunicationsDto>>> GetAllContactWithCommunicationsAsync()
+        public async Task<Response<List<ContactStatisticsDto>>> GetAllContactWithCommunicationsAsync()
         {
+            List<ContactStatisticsDto> contactStatistics = new List<ContactStatisticsDto>();
             var contacts = await _contactCollection.Find(x => true).ToListAsync();
             var contactIds = contacts.Select(x => x.Id).ToList();
-            var communications = (await _communicationService.GetAllByContactIds(contactIds)).Data;
-            var contactDtos = _mapper.Map<List<ContactWithCommunicationsDto>>(contacts);
-            contactDtos.ForEach(x =>
+            var communications = (await _communicationService.GetAllByContactIdsAsync(contactIds)).Data;
+           
+            var locationGroup = communications.Where(x => x.CommunicationType == CommunicationType.LOCATION)
+                .GroupBy(x => x.Address).Select(x => x.Key).ToList();
+
+            locationGroup.ForEach(location =>
             {
-                x.Communications = communications.Where(y => y.ContactId == x.Id).ToList();
+                var contactIdsOfLocation = communications.Where(x => x.Address == location && x.CommunicationType == CommunicationType.LOCATION)
+                .Select(x => x.ContactId).Distinct().ToList();//Same contact filtered.
+
+                var phoneCountOfLocation = communications.Where(x => contactIdsOfLocation.Contains(x.ContactId) && x.CommunicationType == CommunicationType.PHONE)
+                .Select(x =>x.Address).Distinct().Count();//Same phone filtered.
+
+                contactStatistics.Add(new ContactStatisticsDto
+                {
+                    Location= location,
+                    ContactCount= contactIdsOfLocation.Count,
+                    PhoneCount= phoneCountOfLocation
+                });
             });
-            return Response<List<ContactWithCommunicationsDto>>.Success(contactDtos, 200);
+
+            return Response<List<ContactStatisticsDto>>.Success(contactStatistics, 200);
         }
 
         public async Task<Response<ContactWithCommunicationsDto>> GetById(string id)
@@ -54,7 +70,7 @@ namespace Contact.Service.Services
                 return Response<ContactWithCommunicationsDto>.Fail("Contact not found!", 404);
             }
             var contactDto = _mapper.Map<ContactWithCommunicationsDto>(contact);
-            var communicationsResponse = await _communicationService.GetAllByContactId(contact.Id);
+            var communicationsResponse = await _communicationService.GetAllByContactIdAsync(contact.Id);
             contactDto.Communications = communicationsResponse.Data;
             return Response<ContactWithCommunicationsDto>.Success(contactDto, 200);
         }

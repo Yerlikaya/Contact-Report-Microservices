@@ -25,14 +25,14 @@ namespace Contact.Service.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string userId)
         {
-            var response = await _communicationService.GetById(userId);
+            var response = await _communicationService.GetByIdAsync(userId);
             return CreateActionResultInstance(response);
         }
         [HttpGet]
         [Route("GetAllByContactId/{contactId}")]
         public async Task<IActionResult>GetAllByContactId(string contactId)
         {
-            var response = await _communicationService.GetAllByContactId(contactId);
+            var response = await _communicationService.GetAllByContactIdAsync(contactId);
             return CreateActionResultInstance(response);
         }
 

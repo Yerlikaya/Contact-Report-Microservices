@@ -10,6 +10,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contact.Service", "Services\Contact\Contact.Service\Contact.Service.csproj", "{2499E8B7-0CE0-45EC-B962-AA9B1526ADB5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{E92A711E-8392-4B58-B4FD-BC209801188B}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Contact\Contact.Service\Dtos\ContactStatisticsDto.cs = Services\Contact\Contact.Service\Dtos\ContactStatisticsDto.cs
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{C2A1E31B-DC4E-4CEA-8774-AC66695FA3A3}"
 EndProject
@@ -17,12 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Report", "Report", "{DAB660
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Report.Service", "Services\Report\Report.Service\Report.Service.csproj", "{8130E6FB-16A3-4F5D-87B9-3ABBA43FF064}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contact.ServiceTests", "Services\Contact\Contact.ServiceTests\Contact.ServiceTests.csproj", "{08AC08EC-7C00-454E-966F-1AC62967BAA0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{C5E3759E-6AA1-4929-B6BF-52FB99E5DC8E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{101FC5B5-2CB1-4C22-84B0-B996F4FD62B8}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\Users\oyerl\Desktop\Readme.txt = ..\..\Users\oyerl\Desktop\Readme.txt
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contact.ServiceTests", "UnitTests\Contact.ServiceTests\Contact.ServiceTests.csproj", "{FFB33726-FEAA-40A9-A1CD-55B3919C69EE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Report.ServiceTests", "UnitTests\Report.ServiceTests\Report.ServiceTests.csproj", "{2BB818D1-45BA-49F0-8C09-39C18F182223}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +44,14 @@ Global
 		{8130E6FB-16A3-4F5D-87B9-3ABBA43FF064}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8130E6FB-16A3-4F5D-87B9-3ABBA43FF064}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8130E6FB-16A3-4F5D-87B9-3ABBA43FF064}.Release|Any CPU.Build.0 = Release|Any CPU
-		{08AC08EC-7C00-454E-966F-1AC62967BAA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08AC08EC-7C00-454E-966F-1AC62967BAA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08AC08EC-7C00-454E-966F-1AC62967BAA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08AC08EC-7C00-454E-966F-1AC62967BAA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFB33726-FEAA-40A9-A1CD-55B3919C69EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFB33726-FEAA-40A9-A1CD-55B3919C69EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFB33726-FEAA-40A9-A1CD-55B3919C69EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFB33726-FEAA-40A9-A1CD-55B3919C69EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB818D1-45BA-49F0-8C09-39C18F182223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB818D1-45BA-49F0-8C09-39C18F182223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB818D1-45BA-49F0-8C09-39C18F182223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB818D1-45BA-49F0-8C09-39C18F182223}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -56,7 +62,8 @@ Global
 		{C2A1E31B-DC4E-4CEA-8774-AC66695FA3A3} = {E92A711E-8392-4B58-B4FD-BC209801188B}
 		{DAB6601F-0828-46EE-8699-DF1F47671DED} = {0BC73FEF-AC82-4A6C-952F-3FFCEB82B482}
 		{8130E6FB-16A3-4F5D-87B9-3ABBA43FF064} = {DAB6601F-0828-46EE-8699-DF1F47671DED}
-		{08AC08EC-7C00-454E-966F-1AC62967BAA0} = {A85FC940-1A23-4CFB-8007-257B086F94E2}
+		{FFB33726-FEAA-40A9-A1CD-55B3919C69EE} = {C5E3759E-6AA1-4929-B6BF-52FB99E5DC8E}
+		{2BB818D1-45BA-49F0-8C09-39C18F182223} = {C5E3759E-6AA1-4929-B6BF-52FB99E5DC8E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C259DAC-5B56-4589-B7DA-9D1484E3BDA0}

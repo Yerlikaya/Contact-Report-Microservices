@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Contact.Service\Contact.Service.csproj" />
+    <ProjectReference Include="..\..\Services\Report\Report.Service\Report.Service.csproj" />
   </ItemGroup>
 
 </Project>

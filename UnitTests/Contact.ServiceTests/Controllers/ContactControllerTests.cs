@@ -85,7 +85,7 @@ namespace Contact.Service.Controllers.Tests
         {
             var actionResult = await _controller.GetAllReportData();
             var okResult = actionResult as ObjectResult;
-            var actualConfiguration = okResult.Value as Response<List<ContactWithCommunicationsDto>>;
+            var actualConfiguration = okResult.Value as Response<List<ContactStatisticsDto>>;
             Assert.IsNotNull(actualConfiguration);
             Assert.IsTrue(actualConfiguration.IsSuccessful);
             Assert.IsNotNull(actualConfiguration.Data);

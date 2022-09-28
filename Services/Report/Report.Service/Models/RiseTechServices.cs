@@ -2,21 +2,14 @@
 {
     public class RiseTechServices
     {
+        
+        public ServiceInfo ContactService { get; set; }
+        public ServiceInfo ReportService { get; set; }
+    }
+
+    public class ServiceInfo
+    {
         public string Domain { get; set; }
-        public ContactServiceInfo ContactService { get; set; }
-        public ReportServiceInfo ReportService { get; set; }
-    }
-
-    public class ContactServiceInfo
-    {
-        public int Port { get; set; }
-        public string ContactReportDataGetPath { get; set; }
-    }
-
-    public class ReportServiceInfo
-    {
-        public int Port { get; set; }
-        public string ReportUpdatePath { get; set; }
     }
 
 }

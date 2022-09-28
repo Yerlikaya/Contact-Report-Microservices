@@ -22,7 +22,7 @@ builder.Services.AddSingleton(sp =>
     }
 );
 builder.Services.AddSingleton<RabbitMQClientService>();
-builder.Services.AddSingleton<RabbitMQPublisherService>();
+builder.Services.AddSingleton<IRabbitMQPublisherService, RabbitMQPublisherService>();
 builder.Services.AddSingleton<HttpClientService>();
 
 builder.Services.AddHostedService<ExcelReportBackgroundService>();

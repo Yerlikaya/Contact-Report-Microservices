@@ -49,7 +49,7 @@ namespace Contact.ServiceTests.Services
             return Response<List<CommunicationDto>>.Success(_mapper.Map<List<CommunicationDto>>(communications), 200);
         }
 
-        public async Task<Response<List<CommunicationDto>>> GetAllByContactId(string contactId)
+        public async Task<Response<List<CommunicationDto>>> GetAllByContactIdAsync(string contactId)
         {
             var communications = contextDb.Where(x => x.ContactId == contactId).ToList();
             if (communications.Any())
@@ -59,7 +59,7 @@ namespace Contact.ServiceTests.Services
             return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
         }
 
-        public async Task<Response<List<CommunicationDto>>> GetAllByContactIds(List<string> contactIds)
+        public async Task<Response<List<CommunicationDto>>> GetAllByContactIdsAsync(List<string> contactIds)
         {
             var communications = contextDb.Where(x =>contactIds.Contains(x.ContactId)).ToList();
             if (communications.Any())
@@ -69,7 +69,7 @@ namespace Contact.ServiceTests.Services
             return Response<List<CommunicationDto>>.Fail("Communications not found!", 404);
         }
 
-        public async Task<Response<CommunicationDto>> GetById(string id)
+        public async Task<Response<CommunicationDto>> GetByIdAsync(string id)
         {
             var communication =  contextDb.FirstOrDefault(x => x.Id == id);
             if (communication == null)
