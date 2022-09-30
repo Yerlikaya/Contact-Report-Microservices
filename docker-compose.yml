@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  contactdb:
+    image: mongo
+  reportdb:
+    image: postgres
+  rabbitmq:
+    image: rabbitmq:3.11.0-management
+  contact.api:
+    image: contact_api_image
+    build: 
+      context: .
+      dockerfile: Services/Contact/Contact.Service/Dockerfile
+  report.api:
+    image: report_api_image
+    build: 
+      context: .
+      dockerfile: Services/Report/Report.Service/Dockerfile
+
+volumes:
+  contactdb_volume:
+  reportdb_volume:

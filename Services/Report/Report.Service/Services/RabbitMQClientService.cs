@@ -32,9 +32,9 @@ namespace Report.Service.Services
         public void Dispose()
         {
             _channel?.Close();
-            _channel.Dispose();
+            _channel?.Dispose();
 
-            _connection.Close();
+            _connection?.Close();
             _connection?.Dispose();
         }
     }
