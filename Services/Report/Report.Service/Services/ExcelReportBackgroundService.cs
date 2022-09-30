@@ -62,7 +62,7 @@ namespace Report.Service.Services
 
                 Task.Delay(5000).Wait();// Yapay kuyruk trafiği...
 
-                _= UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.COMPLETED);
+                await UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.COMPLETED);
 
                 _channel.BasicAck(@event.DeliveryTag, false);
             }
