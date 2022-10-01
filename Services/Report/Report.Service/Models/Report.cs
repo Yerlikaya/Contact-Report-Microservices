@@ -8,7 +8,7 @@ namespace Report.Service.Models
         public int Id { get; set; }
         public DateTime CreatedDate { get; set; }
         public ReportStatusType Status { get; set; }
-        public string ReportPath { get; set; }
+        public string FilePath { get; set; }
     }
     public enum ReportStatusType
     {

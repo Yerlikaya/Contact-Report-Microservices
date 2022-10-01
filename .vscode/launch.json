@@ -1,11 +1,31 @@
 {
     "version": "0.2.0",
-    "configurations": [
+    "configurations": [     
+        {
+            "name": "Contact.Service",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Services/Contact/Contact.Service/bin/Debug/net6.0/Contact.Service.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Services/Contact/Contact.Service",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
         {
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
             // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
-            "name": ".NET Core Launch (web)",
+            "name": "Report.Service",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",

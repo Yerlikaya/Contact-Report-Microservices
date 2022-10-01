@@ -6,6 +6,6 @@ namespace Report.Service.Dtos
     {
         public DateTime CreatedDate { get; set; }
         public ReportStatusType Status { get; set; } = ReportStatusType.WAITING;
-        public string ReportPath { get; set; }
+        public string FilePath { get; set; }
     }
 }

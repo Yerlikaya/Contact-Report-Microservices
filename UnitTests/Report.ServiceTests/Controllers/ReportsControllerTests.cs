@@ -52,7 +52,7 @@ namespace Report.Service.Controllers.Tests
         [TestMethod()]
         public async Task UpdateTest()
         {
-            ReportDto report = new ReportDto { Id = 1, CreatedDate = DateTime.Now.AddHours(-1), ReportPath = "TestPath1", Status = Models.ReportStatusType.COMPLETED };
+            ReportDto report = new ReportDto { Id = 1, CreatedDate = DateTime.Now.AddHours(-1), FilePath = "TestPath1", Status = Models.ReportStatusType.COMPLETED };
             var actionResult = await _controller.Update(report);
             var okResult = actionResult as ObjectResult;
             var actualConfiguration = okResult.Value as Response<NoContent>;

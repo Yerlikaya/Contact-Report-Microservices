@@ -37,7 +37,7 @@ namespace Report.Service.Services
         }
         public async Task<Response<ReportDto>> CreateAsync()
         {
-            var report = new Models.Report { Status = ReportStatusType.WAITING, CreatedDate = DateTime.Now.ToUniversalTime(), ReportPath = "NoPath" };
+            var report = new Models.Report { Status = ReportStatusType.WAITING, CreatedDate = DateTime.Now.ToUniversalTime(), FilePath = "NoPath" };
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
             return Response<ReportDto>.Success(_mapper.Map<ReportDto>(report), 200);

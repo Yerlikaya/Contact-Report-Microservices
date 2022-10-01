@@ -35,7 +35,7 @@ namespace Report.Service.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ReportPath")
+                    b.Property<string>("FilePath")
                         .HasColumnType("text");
 
                     b.Property<int>("Status")

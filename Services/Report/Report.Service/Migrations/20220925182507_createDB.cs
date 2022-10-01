@@ -18,7 +18,7 @@ namespace Report.Service.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    ReportPath = table.Column<string>(type: "text", nullable: true)
+                    FilePath = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {

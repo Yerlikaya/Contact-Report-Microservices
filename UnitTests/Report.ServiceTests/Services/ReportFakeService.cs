@@ -19,10 +19,10 @@ namespace Report.ServiceTests.Services
 
         public ReportFakeService()
         {
-            contextDb = new List<ReportModel>() { new ReportModel() { Id = 1, ReportPath = "Parth1", CreatedDate = DateTime.Now, Status = Service.Models.ReportStatusType.WAITING },
-            new ReportModel() { Id = 2, ReportPath = "Parth2", CreatedDate = DateTime.Now.AddDays(-1), Status = Service.Models.ReportStatusType.INPROGRESS },
-            new ReportModel() { Id = 3, ReportPath = "Parth3", CreatedDate = DateTime.Now.AddDays(-2), Status = Service.Models.ReportStatusType.COMPLETED },
-            new ReportModel() { Id = 4, ReportPath = "Parth4", CreatedDate = DateTime.Now.AddDays(-3), Status = Service.Models.ReportStatusType.FAILED },};
+            contextDb = new List<ReportModel>() { new ReportModel() { Id = 1, FilePath = "Parth1", CreatedDate = DateTime.Now, Status = Service.Models.ReportStatusType.WAITING },
+            new ReportModel() { Id = 2, FilePath = "Parth2", CreatedDate = DateTime.Now.AddDays(-1), Status = Service.Models.ReportStatusType.INPROGRESS },
+            new ReportModel() { Id = 3, FilePath = "Parth3", CreatedDate = DateTime.Now.AddDays(-2), Status = Service.Models.ReportStatusType.COMPLETED },
+            new ReportModel() { Id = 4, FilePath = "Parth4", CreatedDate = DateTime.Now.AddDays(-3), Status = Service.Models.ReportStatusType.FAILED },};
 
             var config = new MapperConfiguration(cfg => cfg.AddProfile<GeneralMapper>());
             _mapper = config.CreateMapper();
@@ -30,7 +30,7 @@ namespace Report.ServiceTests.Services
 
         public async Task<Response<ReportDto>> CreateAsync()
         {
-            ReportModel report = new ReportModel { Status = Service.Models.ReportStatusType.WAITING, CreatedDate = DateTime.Now.ToUniversalTime(), ReportPath = "NoPath" };
+            ReportModel report = new ReportModel { Status = Service.Models.ReportStatusType.WAITING, CreatedDate = DateTime.Now.ToUniversalTime(), FilePath = "NoPath" };
             contextDb.Add(report);
             return Response<ReportDto>.Success(_mapper.Map<ReportDto>(report), 200);
         }

@@ -83,7 +83,7 @@ namespace Report.Service.Services
 
         private static StringContent CreateUpdateRequest(CreateReportEvent reportEvent, string path, ReportStatusType reportStatusType)
         {
-            ReportDto reportDto = new ReportDto { Id = reportEvent.ReportId, CreatedDate = DateTime.UtcNow, ReportPath = path, Status = reportStatusType };
+            ReportDto reportDto = new ReportDto { Id = reportEvent.ReportId, CreatedDate = DateTime.UtcNow, FilePath = path, Status = reportStatusType };
             var jsonReportDto = JsonSerializer.Serialize(reportDto);
             StringContent stringContent = new StringContent(jsonReportDto, Encoding.UTF8, "application/json");
             return stringContent;
