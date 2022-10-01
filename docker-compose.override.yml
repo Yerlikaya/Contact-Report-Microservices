@@ -1,29 +1,31 @@
 version: '3.8'
 services:
-  contactdb:
-    container_name: contactdb
-    restart: always
-    ports:
-      - 27017:27017
-    volumes:
-      - data/db
+  rabbitmq:
+      container_name: rabbitmq
+      restart: always
+      ports:
+        - 5672:5672
+        - 15672:15672
   reportdb:
     container_name: reportdb
     restart: always
     ports:
       - 5432:5432
     volumes:
-      - var/lib/postgresql/data
+      - /var/lib/postgresql/data
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=P@ssw0rd!
       - POSTGRES_DB=reportdb
-  rabbitmq:
-    container_name: rabbitmq
+  contactdb:
+    container_name: contactdb
     restart: always
+    environment:
+      - MONGO_DATA_DIR=data/db
     ports:
-      - 5672:5672
-      - 15672:15672
+      - 27017:27017
+    volumes:
+      - .:/data/db
   contact.api:
     container_name: contact.api
     environment:
@@ -35,14 +37,19 @@ services:
       - contactdb
   report.api:
     container_name: report.api
+    ports:
+      - 5170:80
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings:PostgreSql=User ID=admin;Password=P@ssw0rd!;Server=reportdb;Port=5432;Database=reportdb;Integrated Security=true;Pooling=true
       - ConnectionStrings:RabbitMQ=amqp://guest:guest@rabbitmq:5672
-      - RiseTechServices:ContactService:Domain=http://contact.api:5235
-      - RiseTechServices:ReportService:Domain=http://report.api:5235
-    ports:
-      - 5170:80
+      - RiseTechServices:ContactService:Domain=http://contact.api/
+      - RiseTechServices:ReportService:Domain=http://report.api/
+    volumes:
+      - type: bind
+        source: C:\Users\Public\Documents\ContactStatistics
+        target: /app/wwwRoot
     depends_on:
       - rabbitmq
       - reportdb
+

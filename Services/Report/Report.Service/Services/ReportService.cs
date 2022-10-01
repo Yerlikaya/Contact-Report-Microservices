@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Report.Service.DBContext;
 using Report.Service.Dtos;
+using Report.Service.Models;
 using Shared.Dtos;
 
 namespace Report.Service.Services
@@ -34,9 +35,9 @@ namespace Report.Service.Services
 
             return Response<ReportDto>.Success(_mapper.Map<ReportDto>(report), 200);
         }
-        public async Task<Response<ReportDto>> CreateAsync(ReportCreateDto reportDto)
+        public async Task<Response<ReportDto>> CreateAsync()
         {
-            var report = _mapper.Map<Models.Report>(reportDto);
+            var report = new Models.Report { Status = ReportStatusType.WAITING, CreatedDate = DateTime.Now.ToUniversalTime(), ReportPath = "NoPath" };
             _context.Reports.Add(report);
             await _context.SaveChangesAsync();
             return Response<ReportDto>.Success(_mapper.Map<ReportDto>(report), 200);

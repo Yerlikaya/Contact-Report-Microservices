@@ -39,10 +39,10 @@ namespace Report.Service.Controllers
             return CreateActionResultInstance(response);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(ReportCreateDto report)
+        public async Task<IActionResult> Create()
         {
-            var response = await _reportService.CreateAsync(report);
-            _rabbitMQPublisherService.Publish(new CreateReportEvent { ReportId = response.Data.Id }, 
+            var response = await _reportService.CreateAsync();
+            _rabbitMQPublisherService.Publish(new CreateReportEvent(response.Data.Id), 
                 Constant.ReportQueue, Constant.ReportRouting, Constant.ReportExchange);
             return CreateActionResultInstance(response);
         }

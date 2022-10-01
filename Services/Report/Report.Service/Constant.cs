@@ -10,7 +10,7 @@ namespace Report.Service
         #endregion
 
         #region Contact API
-        public const string ContactGetReportData = "api/Contact/GetAllContactsWithCommunications";
+        public const string ContactGetReportData = "api/Contact/GetContactStatistics";
         #endregion
 
         #region RabitMQ 

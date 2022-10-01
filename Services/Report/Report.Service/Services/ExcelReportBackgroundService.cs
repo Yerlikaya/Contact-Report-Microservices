@@ -18,10 +18,11 @@ namespace Report.Service.Services
         private IModel _channel;
         private readonly string _contactReportDataGetUrl;
         private readonly string _reportUpdateUrl;
+        ILogger<ExcelReportBackgroundService> _logger;
 
-
-        public ExcelReportBackgroundService(RabbitMQClientService rabbitMQClientService, HttpClientService httpClientService, IOptions<RiseTechServices> riseTechService)
+        public ExcelReportBackgroundService(RabbitMQClientService rabbitMQClientService, HttpClientService httpClientService, IOptions<RiseTechServices> riseTechService, ILogger<ExcelReportBackgroundService> logger)
         {
+            _logger = logger;
             _rabbitMQClientService = rabbitMQClientService;
             _httpClientService = httpClientService;
             _contactReportDataGetUrl = $"{riseTechService.Value.ContactService.Domain}{Constant.ContactGetReportData}";
@@ -30,6 +31,7 @@ namespace Report.Service.Services
 
         public override Task StartAsync(CancellationToken cancellationToken)
         {
+            Task.Delay(5000).Wait();//Wait for the RabbitMQ to be prepared with Docker
             _channel = _rabbitMQClientService.Connect(Constant.ReportQueue, Constant.ReportRouting, Constant.ReportExchange);
             _channel.BasicQos(0, 1, false);
             return base.StartAsync(cancellationToken);
@@ -45,11 +47,11 @@ namespace Report.Service.Services
         private async Task Consumer_Received(object sender, BasicDeliverEventArgs @event)
         {
             var reportEvent = JsonSerializer.Deserialize<CreateReportEvent>(Encoding.UTF8.GetString(@event.Body.ToArray()));
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwRoot", reportEvent.ReportName +".xlsx");
+            var path = Path.Combine("./", "wwwRoot", reportEvent.ReportName +".xlsx");
             try
             {
-                _= UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.INPROGRESS);
                 var reportDataRaw = await _httpClientService.GetAsync(_contactReportDataGetUrl);
+                await UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.INPROGRESS);
 
                 var options = new JsonSerializerOptions
                 {
@@ -67,7 +69,8 @@ namespace Report.Service.Services
             }
             catch (Exception ex)
             {
-                _= UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.FAILED);
+                _logger.LogError(ex.Message);
+                await UpdateReportInformationsAsync(reportEvent, path, ReportStatusType.FAILED);
             }
 
         }

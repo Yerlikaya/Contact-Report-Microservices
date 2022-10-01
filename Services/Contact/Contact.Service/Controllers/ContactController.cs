@@ -50,7 +50,7 @@ namespace Contact.Service.Controllers
         }
 
         [HttpGet]
-        [Route("GetAllContactsWithCommunications")]
+        [Route("GetContactStatistics")]
         public async Task<IActionResult> GetAllReportData()
         {
             var response = await _contactService.GetAllContactWithCommunicationsAsync();

@@ -7,7 +7,7 @@ namespace Report.Service.Services
     {
         Task<Response<List<ReportDto>>> GetAllAsync();
         Task<Response<ReportDto>> GetByIdAsync(int id);
-        Task<Response<ReportDto>> CreateAsync(ReportCreateDto reportDto);
+        Task<Response<ReportDto>> CreateAsync();
         Task<Response<NoContent>> UpdateAsync(ReportDto reportDto);
         Task<Response<NoContent>> DeleteAsync(int id);
     }

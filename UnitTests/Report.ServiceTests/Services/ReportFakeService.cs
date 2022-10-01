@@ -23,16 +23,16 @@ namespace Report.ServiceTests.Services
             new ReportModel() { Id = 2, ReportPath = "Parth2", CreatedDate = DateTime.Now.AddDays(-1), Status = Service.Models.ReportStatusType.INPROGRESS },
             new ReportModel() { Id = 3, ReportPath = "Parth3", CreatedDate = DateTime.Now.AddDays(-2), Status = Service.Models.ReportStatusType.COMPLETED },
             new ReportModel() { Id = 4, ReportPath = "Parth4", CreatedDate = DateTime.Now.AddDays(-3), Status = Service.Models.ReportStatusType.FAILED },};
-            
+
             var config = new MapperConfiguration(cfg => cfg.AddProfile<GeneralMapper>());
             _mapper = config.CreateMapper();
         }
-        
-        public async Task<Response<ReportDto>> CreateAsync(ReportCreateDto reportDto)
+
+        public async Task<Response<ReportDto>> CreateAsync()
         {
-            var newCommunication = _mapper.Map<ReportModel>(reportDto);
-            contextDb.Add(newCommunication);
-            return Response<ReportDto>.Success(_mapper.Map<ReportDto>(newCommunication), 200);
+            ReportModel report = new ReportModel { Status = Service.Models.ReportStatusType.WAITING, CreatedDate = DateTime.Now.ToUniversalTime(), ReportPath = "NoPath" };
+            contextDb.Add(report);
+            return Response<ReportDto>.Success(_mapper.Map<ReportDto>(report), 200);
         }
 
         public async Task<Response<NoContent>> DeleteAsync(int id)

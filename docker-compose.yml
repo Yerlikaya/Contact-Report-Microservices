@@ -19,4 +19,6 @@ services:
 
 volumes:
   contactdb_volume:
+    driver: local
   reportdb_volume:
+    driver: local
